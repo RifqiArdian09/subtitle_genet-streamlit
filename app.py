@@ -9,8 +9,12 @@ import streamlit as st
 # Whisper (openai-whisper)
 import whisper
 
-# MoviePy for audio extraction from video
-from moviepy.editor import VideoFileClip
+# MoviePy for audio extraction from video (compatible with MoviePy v2+ and v1)
+try:
+    # MoviePy v2+ recommended import path
+    from moviepy.video.io.VideoFileClip import VideoFileClip
+except Exception:  # fallback for older MoviePy versions
+    from moviepy.editor import VideoFileClip
 
 
 # -----------------------------

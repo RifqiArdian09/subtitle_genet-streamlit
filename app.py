@@ -70,12 +70,15 @@ def extract_audio_if_needed(upload_path: str, suffix: str, progress=None) -> Tup
         # Create temp WAV file
         temp_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
         temp_audio.close()  # will write via moviepy/ffmpeg
-        # Extract with MoviePy
-        clip = VideoFileClip(upload_path)
-        try:
-            clip.audio.write_audiofile(temp_audio.name, codec="pcm_s16le", verbose=False, logger=None)
-        finally:
-            clip.close()
+        # Extract with MoviePy (use context manager to ensure closure)
+        with VideoFileClip(upload_path) as clip:
+            # For WAV output, no codec arg is needed in MoviePy v2; set fps for consistency
+            clip.audio.write_audiofile(
+                temp_audio.name,
+                fps=16000,
+                verbose=False,
+                logger=None,
+            )
         if progress:
             progress.progress(35, text="Audio berhasil diekstrak.")
         return temp_audio.name, temp_audio

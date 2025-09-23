@@ -93,10 +93,10 @@ def load_whisper_model(model_size: str = "base"):
 
 
 def main():
-    st.set_page_config(page_title="Subtitle Generator", page_icon="🎬", layout="wide")
+    st.set_page_config(page_title="Submaker", page_icon="🎬", layout="wide")
 
     # Sidebar UI
-    st.sidebar.title("Subtitle Generator")
+    st.sidebar.title("Submaker")
     st.sidebar.markdown("Unggah file audio/video Anda untuk menghasilkan subtitle .srt secara otomatis.")
 
     model_size = st.sidebar.selectbox(
@@ -112,7 +112,7 @@ def main():
         accept_multiple_files=False
     )
 
-    st.title("Subtitle Generator")
+    st.title("Submaker")
     st.write("Aplikasi untuk men-generate subtitle (.srt) otomatis menggunakan OpenAI Whisper.")
 
     placeholder_progress = st.empty()

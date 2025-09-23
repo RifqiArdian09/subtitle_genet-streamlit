@@ -1,6 +1,6 @@
-# Subtitle Generator (Streamlit + Whisper)
+# Submaker (Streamlit + Whisper)
 
-A simple web app to generate subtitles (`.srt`) from audio/video using [OpenAI Whisper](https://github.com/openai/whisper) and [MoviePy](https://github.com/Zulko/moviepy). Built with [Streamlit](https://streamlit.io/).
+Submaker adalah aplikasi web sederhana untuk membuat subtitle (`.srt`) dari audio/video menggunakan [OpenAI Whisper](https://github.com/openai/whisper) dan [MoviePy](https://github.com/Zulko/moviepy). Dibangun dengan [Streamlit](https://streamlit.io/).
 
 ## Features
 - Upload audio/video (`.mp3`, `.wav`, `.mp4`)
@@ -41,13 +41,13 @@ Notes:
     ```
 - MoviePy uses `ffmpeg`. The `imageio-ffmpeg` package bundled in requirements typically handles this automatically.
 
-## Run the app
+## Menjalankan aplikasi
 ```
 streamlit run app.py
 ```
-Then open the local URL shown in the terminal (usually http://localhost:8501).
+Lalu buka URL lokal yang ditampilkan di terminal (biasanya http://localhost:8501).
 
-## Usage
+## Cara penggunaan
 1. In the sidebar, upload an `mp3`, `wav`, or `mp4` file.
 2. Optionally select the Whisper model size (larger models are slower but more accurate).
 3. Wait for processing to finish (watch the progress text/bar).
@@ -60,7 +60,7 @@ Then open the local URL shown in the terminal (usually http://localhost:8501).
 - If MoviePy complains about `ffmpeg`, ensure `imageio-ffmpeg` is installed (it is included in `requirements.txt`).
 - On first run, Whisper may download model weights; this can take time based on model size and your internet speed.
 
-## Project structure
+## Struktur proyek
 - `app.py` — Streamlit application
 - `requirements.txt` — Python dependencies
 - `README.md` — Setup and usage guide

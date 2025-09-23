@@ -120,21 +120,34 @@ def main():
         # Show file details
         st.info(f"File diunggah: {uploaded_file.name}")
 
-        # Preview media (video for MP4, audio for MP3/WAV)
-        ext_uploaded = os.path.splitext(uploaded_file.name)[1].lower()
-        try:
-            with open(temp_upload_path, "rb") as f:
-                media_bytes = f.read()
-            if ext_uploaded == ".mp4":
-                st.video(media_bytes)
-            elif ext_uploaded in [".mp3", ".wav"]:
-                st.audio(media_bytes)
-        except Exception:
-            # If preview fails, continue without blocking the workflow
-            pass
+        # Layout: two columns (left: media preview & info, right: progress & results)
+        col_preview, col_results = st.columns([1, 1.2], gap="large")
 
-        # Create a progress bar
-        progress_bar = placeholder_progress.progress(5, text="Menyiapkan transkripsi...")
+        # Prepare results container and progress placeholder on the right column
+        with col_results:
+            results_container = st.container()
+            progress_placeholder = st.empty()
+
+        # Preview media (video for MP4, audio for MP3/WAV) on the left column
+        with col_preview:
+            st.markdown("### Preview")
+            ext_uploaded = os.path.splitext(uploaded_file.name)[1].lower()
+            try:
+                with open(temp_upload_path, "rb") as f:
+                    media_bytes = f.read()
+                if ext_uploaded == ".mp4":
+                    st.video(media_bytes)
+                elif ext_uploaded in [".mp3", ".wav"]:
+                    st.audio(media_bytes)
+            except Exception:
+                # If preview fails, continue without blocking the workflow
+                st.info("Preview tidak tersedia.")
+            # Basic file info
+            st.caption(f"Ukuran file: {os.path.getsize(temp_upload_path)/1_000_000:.2f} MB")
+
+        # Create a progress bar in the right column
+        with col_results:
+            progress_bar = progress_placeholder.progress(5, text="Menyiapkan transkripsi...")
 
         # Extract audio if needed
         audio_path, temp_audio_file = extract_audio_if_needed(temp_upload_path, suffix=".wav", progress=progress_bar)
@@ -183,21 +196,25 @@ def main():
         segments = result.get("segments") or []
         srt_content = build_srt_from_segments(segments)
 
-        # Show results
-        st.subheader("Hasil Transkripsi")
+        # Show results in the right column
+        results_container.subheader("Hasil Transkripsi")
         if transcript_text:
-            st.text_area("Teks Transkripsi", value=transcript_text, height=250)
+            results_container.text_area("Teks Transkripsi", value=transcript_text, height=260)
         else:
-            st.warning("Tidak ada teks yang dihasilkan dari transkripsi.")
+            results_container.warning("Tidak ada teks yang dihasilkan dari transkripsi.")
 
         # Download button for SRT
         srt_filename = os.path.splitext(uploaded_file.name)[0] + ".srt"
-        st.download_button(
+        results_container.download_button(
             label="Download Subtitle (.srt)",
             data=srt_content.encode("utf-8"),
             file_name=srt_filename,
             mime="application/x-subrip",
         )
+
+        # Optional: SRT preview inside an expander
+        with results_container.expander("Lihat isi file .srt"):
+            st.code(srt_content, language="text")
 
         progress_bar.progress(100, text="Selesai!")
 

@@ -63,4 +63,5 @@ Lalu buka URL lokal yang ditampilkan di terminal (biasanya http://localhost:8501
 ## Struktur proyek
 - `app.py` — Streamlit application
 - `requirements.txt` — Python dependencies
+- `packages.txt` — System packages (ffmpeg untuk Streamlit Cloud)
 - `README.md` — Setup and usage guide

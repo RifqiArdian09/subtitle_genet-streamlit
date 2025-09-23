@@ -8,6 +8,9 @@ openai-whisper>=20231117
 moviepy>=1.0.3
 imageio-ffmpeg>=0.4.9
 
+# Additional ffmpeg support for Streamlit Cloud
+ffmpeg-python>=0.2.0
+
 # Whisper depends on PyTorch. For Python < 3.13, install via pip automatically.
 # For Python 3.13, please install PyTorch manually from https://pytorch.org/get-started/locally/
 # to get a compatible wheel for your CUDA/CPU configuration.

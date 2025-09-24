@@ -207,6 +207,7 @@ def main():
             data=srt_content.encode("utf-8"),
             file_name=srt_filename,
             mime="application/x-subrip",
+            use_container_width=True,
         )
 
         txt_filename = os.path.splitext(uploaded_file.name)[0] + ".txt"
@@ -215,6 +216,7 @@ def main():
             data=(transcript_text + "\n").encode("utf-8"),
             file_name=txt_filename,
             mime="text/plain",
+            use_container_width=True,
         )
 
         with results_container.expander("Lihat isi file .srt"):

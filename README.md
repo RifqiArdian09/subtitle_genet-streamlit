@@ -1,67 +1,62 @@
-# Submaker (Streamlit + Whisper)
+# Subtitle Generator 🎬
 
-Submaker adalah aplikasi web sederhana untuk membuat subtitle (`.srt`) dari audio/video menggunakan [OpenAI Whisper](https://github.com/openai/whisper) dan [MoviePy](https://github.com/Zulko/moviepy). Dibangun dengan [Streamlit](https://streamlit.io/).
+Aplikasi web untuk men-generate subtitle (.srt) otomatis dari file audio/video menggunakan OpenAI Whisper.
 
-## Features
-- Upload audio/video (`.mp3`, `.wav`, `.mp4`)
-- Auto-extract audio from video via MoviePy
-- Transcribe with OpenAI Whisper
-- Display full transcript on the page
-- Generate and download `.srt` with timestamps
-- Progress updates during processing
+## Fitur
+
+- ✅ Support format file: MP3, WAV, MP4
+- ✅ Ekstraksi audio otomatis dari video
+- ✅ Multiple model Whisper (tiny, base, small, medium, large)
+- ✅ Preview media sebelum diproses
+- ✅ Download hasil subtitle dalam format .srt
+- ✅ Interface yang user-friendly dengan Streamlit
+
+## Instalasi
+
+1. Clone repository ini
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Pastikan ffmpeg terinstall di sistem Anda
+
+## Cara Penggunaan
+
+1. Jalankan aplikasi:
+   ```bash
+   streamlit run app.py
+   ```
+
+2. Buka browser dan akses `http://localhost:8501`
+
+3. Pilih model Whisper (base direkomendasikan untuk keseimbangan akurasi dan kecepatan)
+
+4. Upload file audio/video Anda
+
+5. Tunggu proses transkripsi selesai
+
+6. Download file subtitle (.srt) yang dihasilkan
 
 ## Requirements
-- Python 3.9–3.12 recommended
-- For Python 3.13: install a compatible PyTorch build manually (see below)
-- Windows/macOS/Linux supported
 
-## Installation
+- Python 3.8+
+- Streamlit
+- OpenAI Whisper
+- MoviePy
+- FFmpeg
 
-1) Create and activate a virtual environment (recommended)
-```
-python -m venv .venv
-# Windows
-.venv\Scripts\activate
-# macOS/Linux
-source .venv/bin/activate
-```
+## Model Whisper
 
-2) Install dependencies
-```
-pip install -r requirements.txt
-```
+| Model | Ukuran | Kecepatan | Akurasi |
+|-------|--------|-----------|---------|
+| tiny  | 39 MB  | Sangat Cepat | Rendah |
+| base  | 74 MB  | Cepat | Sedang |
+| small | 244 MB | Sedang | Baik |
+| medium| 769 MB | Lambat | Sangat Baik |
+| large | 1550 MB| Sangat Lambat | Excellent |
 
-Notes:
-- Whisper depends on PyTorch. The `requirements.txt` will install `torch` automatically on Python < 3.13.
-- On Python 3.13, install PyTorch manually from the official website: https://pytorch.org/get-started/locally/
-  - Choose your OS, Package = `pip`, Language = `Python`, and CUDA (or CPU) to get the right command.
-  - Example CPU-only (version may change):
-    ```
-    pip install torch --index-url https://download.pytorch.org/whl/cpu
-    ```
-- MoviePy uses `ffmpeg`. The `imageio-ffmpeg` package bundled in requirements typically handles this automatically.
+## Catatan
 
-## Menjalankan aplikasi
-```
-streamlit run app.py
-```
-Lalu buka URL lokal yang ditampilkan di terminal (biasanya http://localhost:8501).
-
-## Cara penggunaan
-1. In the sidebar, upload an `mp3`, `wav`, or `mp4` file.
-2. Optionally select the Whisper model size (larger models are slower but more accurate).
-3. Wait for processing to finish (watch the progress text/bar).
-4. Review the transcript shown on the page.
-5. Download the `.srt` subtitle file.
-
-## Troubleshooting
-- If you encounter a message about PyTorch not found on Python 3.13, install it manually from the PyTorch website.
-- For GPU acceleration on Windows, install a CUDA-enabled PyTorch build compatible with your GPU and drivers.
-- If MoviePy complains about `ffmpeg`, ensure `imageio-ffmpeg` is installed (it is included in `requirements.txt`).
-- On first run, Whisper may download model weights; this can take time based on model size and your internet speed.
-
-## Struktur proyek
-- `app.py` — Streamlit application
-- `requirements.txt` — Python dependencies
-- `packages.txt` — System packages (ffmpeg untuk Streamlit Cloud)
-- `README.md` — Setup and usage guide
+- File video akan diekstrak audionya secara otomatis
+- Proses transkripsi membutuhkan waktu tergantung ukuran file dan model yang dipilih
+- Hasil terbaik didapat dengan audio yang jernih dan minim noise

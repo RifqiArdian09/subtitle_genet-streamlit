@@ -1,17 +1,15 @@
 import os
-import io
 import tempfile
 from datetime import timedelta
 from typing import Tuple, Optional
 import hashlib
-
 import streamlit as st
 import whisper
 
 try:
-    from moviepy.video.io.VideoFileClip import VideoFileClip
+    from moviepy.video.io.VideoFileClip import VideoFileClip 
 except Exception:
-    from moviepy.editor import VideoFileClip
+    from moviepy.editor import VideoFileClip 
 
 def format_timestamp(seconds: float) -> str:
     if seconds < 0:
@@ -43,22 +41,20 @@ def extract_audio_if_needed(upload_path: str, suffix: str, progress=None) -> Tup
 
     if ext == ".mp4":
         if progress:
-            progress.progress(20, text="Mengekstrak audio dari video...")
+            progress.progress(20, text="Ngambil audio dari video...")
         temp_audio = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
         temp_audio.close()
         with VideoFileClip(upload_path) as clip:
             clip.audio.write_audiofile(temp_audio.name, fps=16000)
         if progress:
-            progress.progress(35, text="Audio berhasil diekstrak.")
+            progress.progress(35, text="Audio berhasil diambil.")
         return temp_audio.name, temp_audio
 
     return upload_path, None
 
-
 @st.cache_resource(show_spinner=False)
 def load_whisper_model(model_size: str = "base"):
     return whisper.load_model(model_size)
-
 
 def _md5_of_file(path: str) -> str:
     h = hashlib.md5()
@@ -67,9 +63,8 @@ def _md5_of_file(path: str) -> str:
             h.update(chunk)
     return h.hexdigest()
 
-
 def main():
-    st.set_page_config(page_title="Subtitle Generator", page_icon="🎬", layout="wide")
+    st.set_page_config(page_title="Subtitle Generator", layout="wide")
 
     header = st.container()
     with header:
@@ -105,7 +100,7 @@ def main():
             tmp.write(uploaded_file.read())
             temp_upload_path = tmp.name
 
-        st.info(f"File diunggah: {uploaded_file.name}")
+        st.info(f"File diupload: {uploaded_file.name}")
     
         col_preview, col_results = st.columns([1, 1.2], gap="large")
 
@@ -144,36 +139,17 @@ def main():
             try:
                 model = load_whisper_model(model_size)
             except Exception as e:
-                try:
-                    if temp_audio_file is not None:
-                        os.unlink(temp_audio_file.name)
-                except Exception:
-                    pass
-                try:
-                    os.unlink(temp_upload_path)
-                except Exception:
-                    pass
-                st.error(f"Gagal memuat model Whisper: {e}")
+                st.error(f"Gagal load model Whisper: {e}")
                 return
 
             progress_bar.progress(65, text="Melakukan transkripsi audio... Ini bisa memakan waktu.")
             try:
                 result = model.transcribe(audio_path)
             except Exception as e:
-                st.error(f"Terjadi kesalahan saat transkripsi: {e}")
-                try:
-                    if temp_audio_file is not None:
-                        os.unlink(temp_audio_file.name)
-                except Exception:
-                    pass
-                try:
-                    os.unlink(temp_upload_path)
-                except Exception:
-                    pass
+                st.error(f"Error saat transkripsi: {e}")
                 return
 
             progress_bar.progress(85, text="Menyusun hasil dan membuat file .srt...")
-
             transcript_text = (result.get("text") or "").strip()
             segments = result.get("segments") or []
             srt_content = build_srt_from_segments(segments)
@@ -185,11 +161,6 @@ def main():
 
             progress_bar.progress(100, text="Selesai!")
 
-            try:
-                if temp_audio_file is not None:
-                    os.unlink(temp_audio_file.name)
-            except Exception:
-                pass
         else:
             transcript_text = cached['transcript_text']
             srt_content = cached['srt_content']
@@ -210,15 +181,6 @@ def main():
             use_container_width=True,
         )
 
-        txt_filename = os.path.splitext(uploaded_file.name)[0] + ".txt"
-        results_container.download_button(
-            label="Download Transkrip (.txt)",
-            data=(transcript_text + "\n").encode("utf-8"),
-            file_name=txt_filename,
-            mime="text/plain",
-            use_container_width=True,
-        )
-
         with results_container.expander("Lihat isi file .srt"):
             st.code(srt_content, language="text")
 
@@ -228,8 +190,7 @@ def main():
             pass
 
     else:
-        st.info("Silakan unggah file audio/video untuk memulai.")
-
+        st.info("Silakan upload file audio/video dulu.")
 
 if __name__ == "__main__":
     main()
